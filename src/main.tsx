@@ -12,7 +12,7 @@ registerServiceWorker();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/sunstorm-scanner">
       <ApolloProvider client={apolloClient}>
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
