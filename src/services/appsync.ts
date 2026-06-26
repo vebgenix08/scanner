@@ -1,6 +1,6 @@
 import { apolloClient } from "../lib/apolloClient";
-import type { DashboardStats, Scan, VerifyTicketResponse } from "../types/graphql";
-import { DASHBOARD_STATS, RECENT_SCANS, VERIFY_TICKET } from "../graphql/queries";
+import type { Booking, DashboardStats, Scan, VerifyTicketResponse } from "../types/graphql";
+import { DASHBOARD_STATS, LIST_BOOKINGS, RECENT_SCANS, VERIFY_TICKET } from "../graphql/queries";
 
 type VerifyTicketQueryResult = {
   verifyTicket: VerifyTicketResponse;
@@ -119,5 +119,20 @@ export async function getRecentScans(limit = 10) {
     fetchPolicy: "no-cache",
   });
   return data.recentScans;
+}
+
+type ListBookingsQueryResult = {
+  listBookings: Booking[];
+};
+
+export async function getBookings() {
+  if (isMock) {
+    return [];
+  }
+  const { data } = await apolloClient.query<ListBookingsQueryResult>({
+    query: LIST_BOOKINGS,
+    fetchPolicy: "no-cache",
+  });
+  return data.listBookings;
 }
 

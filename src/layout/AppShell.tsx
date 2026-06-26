@@ -12,12 +12,14 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import HistoryIcon from "@mui/icons-material/History";
 import LoginIcon from "@mui/icons-material/Login";
+import PeopleIcon from "@mui/icons-material/People";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const navigation = [
   { label: "Scanner", path: "/scanner", icon: <QrCodeScannerIcon /> },
   { label: "Dashboard", path: "/dashboard", icon: <DashboardIcon /> },
   { label: "Scans", path: "/scans", icon: <HistoryIcon /> },
+  { label: "Users", path: "/users", icon: <PeopleIcon /> },
   { label: "Login", path: "/login", icon: <LoginIcon /> },
 ];
 

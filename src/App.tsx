@@ -4,6 +4,7 @@ import LoginPage from "./pages/login";
 import ScannerPage from "./pages/scanner";
 import DashboardPage from "./pages/dashboard";
 import ScansPage from "./pages/scans";
+import UsersPage from "./pages/users";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/scanner" element={<ScannerPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/scans" element={<ScansPage />} />
+        <Route path="/users" element={<UsersPage />} />
       </Route>
     </Routes>
   );

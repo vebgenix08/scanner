@@ -19,3 +19,16 @@ export type Scan = {
   customerName?: string | null;
   scannedAt?: string | null;
 };
+
+export type Booking = {
+  id: string;
+  bookingNumber: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  quantity: number;
+  status: string;
+  amount: number;
+  ticketCount?: number | null;
+  ticketNumbers?: string[] | null;
+};

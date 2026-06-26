@@ -42,3 +42,21 @@ export const TICKET_DETAILS = gql`
     }
   }
 `;
+
+export const LIST_BOOKINGS = gql`
+  query ListBookings {
+    listBookings {
+      id
+      bookingNumber
+      customerName
+      email
+      phone
+      quantity
+      status
+      amount
+      ticketCount
+      ticketNumbers
+    }
+  }
+`;
+
