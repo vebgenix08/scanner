@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, Stack, Typography } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useCallback, useRef, useState } from "react";
 import QRScanner from "../../components/QRScanner";
@@ -80,17 +80,6 @@ export default function ScannerPage() {
             >
               <QRScanner onScan={handleScan} paused={result !== null || loading} />
             </Box>
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<RefreshIcon />}
-              onClick={() => {
-                setResult(null);
-              }}
-              sx={{ minHeight: 52 }}
-            >
-              Scan Next Ticket
-            </Button>
           </Stack>
         </CardContent>
       </Card>
@@ -103,7 +92,22 @@ export default function ScannerPage() {
         </Card>
       ) : null}
 
-      <TicketResult result={result} />
+      <Dialog open={result !== null} onClose={() => setResult(null)} fullWidth maxWidth="xs">
+        <DialogContent sx={{ p: 2 }}>
+          <TicketResult result={result} />
+        </DialogContent>
+        <DialogActions sx={{ p: 2, pt: 0 }}>
+          <Button
+            variant="contained"
+            fullWidth
+            size="large"
+            onClick={() => setResult(null)}
+            sx={{ py: 1.5 }}
+          >
+            Scan Next Ticket
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 }
