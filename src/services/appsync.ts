@@ -67,8 +67,8 @@ export async function verifyTicket(ticketNumber: string) {
       mockScans = [newScan, ...mockScans];
       mockStats = {
         ...mockStats,
-        totalCheckedIn: mockStats.totalCheckedIn + 1,
-        remainingEntries: Math.max(0, mockStats.remainingEntries - 1),
+        totalCheckedIn: (mockStats.totalCheckedIn ?? 0) + 1,
+        remainingEntries: Math.max(0, (mockStats.remainingEntries ?? 0) - 1),
       };
 
       return {
