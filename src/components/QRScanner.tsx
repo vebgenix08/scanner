@@ -1,12 +1,18 @@
 import { useEffect, useRef } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5QrcodeScanner, Html5QrcodeScannerState } from "html5-qrcode";
 
 type QRScannerProps = {
   onScan: (decodedText: string) => void;
+  paused?: boolean;
 };
 
-export default function QRScanner({ onScan }: QRScannerProps) {
+export default function QRScanner({ onScan, paused }: QRScannerProps) {
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const onScanRef = useRef(onScan);
+
+  useEffect(() => {
+    onScanRef.current = onScan;
+  }, [onScan]);
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -24,10 +30,10 @@ export default function QRScanner({ onScan }: QRScannerProps) {
 
     scanner.render(
       (decodedText) => {
-        onScan(decodedText);
+        onScanRef.current(decodedText);
       },
       () => {
-        // Ignore scan misses and keep the camera live.
+        // Ignore scan misses
       },
     );
 
@@ -35,7 +41,22 @@ export default function QRScanner({ onScan }: QRScannerProps) {
       scanner.clear().catch(() => {});
       scannerRef.current = null;
     };
-  }, [onScan]);
+  }, []);
+
+  useEffect(() => {
+    if (scannerRef.current) {
+      try {
+        const state = scannerRef.current.getState();
+        if (paused && state === Html5QrcodeScannerState.SCANNING) {
+          scannerRef.current.pause(true);
+        } else if (!paused && state === Html5QrcodeScannerState.PAUSED) {
+          scannerRef.current.resume();
+        }
+      } catch (error) {
+        // Ignore pause/resume state errors
+      }
+    }
+  }, [paused]);
 
   return <div id="reader" />;
 }

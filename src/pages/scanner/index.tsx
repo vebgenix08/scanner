@@ -10,37 +10,39 @@ import { extractTicketNumber } from "../../utils/tickets";
 export default function ScannerPage() {
   const [result, setResult] = useState<VerifyTicketResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const lastTicketRef = useRef("");
   const loadingRef = useRef(false);
 
-  const handleScan = useCallback(async (decodedText: string) => {
-    if (loadingRef.current) {
-      return;
-    }
+  const handleScan = useCallback(
+    async (decodedText: string) => {
+      // If we are already loading or already have a result displayed, do not process new scans
+      if (loadingRef.current || result !== null) {
+        return;
+      }
 
-    const ticketNumber = extractTicketNumber(decodedText);
-    if (!ticketNumber || ticketNumber === lastTicketRef.current) {
-      return;
-    }
+      const ticketNumber = extractTicketNumber(decodedText);
+      if (!ticketNumber) {
+        return;
+      }
 
-    lastTicketRef.current = ticketNumber;
-    loadingRef.current = true;
-    setLoading(true);
+      loadingRef.current = true;
+      setLoading(true);
 
-    try {
-      const response = await verifyTicketApi(ticketNumber);
-      setResult(response);
-    } catch (error) {
-      setResult({
-        success: false,
-        message: error instanceof Error ? error.message : "Unable to verify ticket.",
-        ticketNumber,
-      });
-    } finally {
-      loadingRef.current = false;
-      setLoading(false);
-    }
-  }, []);
+      try {
+        const response = await verifyTicketApi(ticketNumber);
+        setResult(response);
+      } catch (error) {
+        setResult({
+          success: false,
+          message: error instanceof Error ? error.message : "Unable to verify ticket.",
+          ticketNumber,
+        });
+      } finally {
+        loadingRef.current = false;
+        setLoading(false);
+      }
+    },
+    [result]
+  );
 
   return (
     <Stack spacing={2.5}>
@@ -76,7 +78,7 @@ export default function ScannerPage() {
                 },
               }}
             >
-              <QRScanner onScan={handleScan} />
+              <QRScanner onScan={handleScan} paused={result !== null || loading} />
             </Box>
             <Button
               variant="outlined"
@@ -84,11 +86,10 @@ export default function ScannerPage() {
               startIcon={<RefreshIcon />}
               onClick={() => {
                 setResult(null);
-                lastTicketRef.current = "";
               }}
               sx={{ minHeight: 52 }}
             >
-              Reset Result
+              Scan Next Ticket
             </Button>
           </Stack>
         </CardContent>
