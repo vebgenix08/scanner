@@ -38,6 +38,57 @@ let mockScans: Scan[] = [
   { ticketNumber: "REG-472019", customerName: "Aditya Rao", scannedAt: new Date(Date.now() - 1000 * 60 * 25).toISOString() },
 ];
 
+const mockBookings: Booking[] = [
+  {
+    id: "bkg-101",
+    bookingNumber: "BKG-2023-101",
+    customerName: "Alex Mercer",
+    email: "alex.m@example.com",
+    phone: "+91 9876543210",
+    quantity: 1,
+    status: "CONFIRMED",
+    amount: 5000, 
+    ticketCount: 1,
+    ticketNumbers: ["VIP-942851"],
+  },
+  {
+    id: "bkg-102",
+    bookingNumber: "BKG-2023-102",
+    customerName: "Priya Singh",
+    email: "priya.s@example.com",
+    phone: "+91 8765432109",
+    quantity: 2,
+    status: "CONFIRMED",
+    amount: 3000, 
+    ticketCount: 2,
+    ticketNumbers: ["REG-104928", "REG-104929"],
+  },
+  {
+    id: "bkg-103",
+    bookingNumber: "BKG-2023-103",
+    customerName: "Rohan Desai",
+    email: "rohan.d@example.com",
+    phone: "+91 7654321098",
+    quantity: 1,
+    status: "CONFIRMED",
+    amount: 5000, 
+    ticketCount: 1,
+    ticketNumbers: ["VIP-830219"],
+  },
+  {
+    id: "bkg-104",
+    bookingNumber: "BKG-2023-104",
+    customerName: "Neha Kapoor",
+    email: "neha.k@example.com",
+    phone: "+91 6543210987",
+    quantity: 1,
+    status: "CONFIRMED",
+    amount: 1500,
+    ticketCount: 1,
+    ticketNumbers: ["REG-749201"],
+  }
+];
+
 export async function verifyTicket(ticketNumber: string) {
   if (isMock) {
     await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate network latency
@@ -56,7 +107,8 @@ export async function verifyTicket(ticketNumber: string) {
     const isReg = ticketNumber.toUpperCase().startsWith("REG-") || ticketNumber.toUpperCase().startsWith("TK-");
 
     if (isVip || isReg) {
-      const name = isVip ? "John Doe (VIP)" : "Jane Smith";
+      const booking = mockBookings.find((b) => b.ticketNumbers?.includes(ticketNumber));
+      const name = booking ? booking.customerName : (isVip ? "John Doe (VIP)" : "Jane Smith");
       const newScan: Scan = {
         ticketNumber,
         customerName: name,
@@ -127,7 +179,7 @@ type ListBookingsQueryResult = {
 
 export async function getBookings() {
   if (isMock) {
-    return [];
+    return mockBookings;
   }
   const { data } = await apolloClient.query<ListBookingsQueryResult>({
     query: LIST_BOOKINGS,
